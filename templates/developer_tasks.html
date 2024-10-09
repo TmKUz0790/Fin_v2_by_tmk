@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Tasks</title>
+</head>
+<body>
+
+<div class="container">
+    <h2>My Assigned Tasks</h2>
+
+    <ul>
+        {% for task in tasks %}
+            <li>
+                <form method="post">
+                    {% csrf_token %}
+                    <strong>{{ task.title }}:</strong> {{ task.description }} ({{ task.task_percentage }}% of project)<br>
+                    Deadline: {{ task.deadline }}<br>
+                    Progress: <input type="number" name="progress" value="{{ task.progress }}" max="100" min="0"> %
+                    <br>
+                    <label for="feedback-{{ task.id }}">Feedback:</label><br>
+                    <textarea id="feedback-{{ task.id }}" name="feedback">{{ task.feedback }}</textarea><br>
+                    <input type="hidden" name="task_id" value="{{ task.id }}">
+                    <button type="submit">Update Progress & Feedback</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+
+</body>
+</html>

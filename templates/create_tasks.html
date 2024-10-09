@@ -1,0 +1,205 @@
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <meta name="viewport" content="width=device-width, initial-scale=1.0">#}
+{#    <title>Create Tasks for {{ job.title }}</title>#}
+{#    <style>#}
+{#        body {#}
+{#            font-family: Arial, sans-serif;#}
+{#            background-color: #f4f4f9;#}
+{#            margin: 0;#}
+{#            padding: 0;#}
+{#            box-sizing: border-box;#}
+{#        }#}
+{##}
+{#        .container {#}
+{#            max-width: 800px;#}
+{#            margin: 50px auto;#}
+{#            background: #fff;#}
+{#            padding: 20px;#}
+{#            border-radius: 8px;#}
+{#            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);#}
+{#        }#}
+{##}
+{#        h2 {#}
+{#            text-align: center;#}
+{#            color: #333;#}
+{#        }#}
+{##}
+{#        form {#}
+{#            display: flex;#}
+{#            flex-direction: column;#}
+{#        }#}
+{##}
+{#        .task-form {#}
+{#            margin-bottom: 20px;#}
+{#            padding: 15px;#}
+{#            background-color: #f9f9f9;#}
+{#            border: 1px solid #ddd;#}
+{#            border-radius: 5px;#}
+{#        }#}
+{##}
+{#        button {#}
+{#            padding: 10px 15px;#}
+{#            background-color: #007bff;#}
+{#            color: white;#}
+{#            border: none;#}
+{#            border-radius: 5px;#}
+{#            font-size: 16px;#}
+{#            cursor: pointer;#}
+{#        }#}
+{##}
+{#        button:hover {#}
+{#            background-color: #0056b3;#}
+{#        }#}
+{##}
+{#        .add-task {#}
+{#            margin-top: 15px;#}
+{#            cursor: pointer;#}
+{#            color: #007bff;#}
+{#        }#}
+{#    </style>#}
+{#</head>#}
+{#<body>#}
+{##}
+{#<div class="container">#}
+{#    <h2>Create Tasks for Job: {{ job.title }}</h2>#}
+{##}
+{#    <form method="post" id="task-formset">#}
+{#        {% csrf_token %}#}
+{#        {{ task_formset.management_form }}#}
+{##}
+{#        <div id="task-forms">#}
+{#            {% for form in task_formset %}#}
+{#                <div class="task-form">#}
+{#                    <h4 id="task-label-{{ forloop.counter }}">Task {{ forloop.counter }}</h4>#}
+{#                    {{ form.as_p }}#}
+{#                    <button type="button" class="delete-task" onclick="deleteTask(this)">Delete</button>#}
+{#                </div>#}
+{#            {% endfor %}#}
+{#        </div>#}
+{##}
+{#        <!-- Button to add more tasks dynamically -->#}
+{#        <span class="add-task" onclick="addTaskForm()">Add another task</span>#}
+{##}
+{#        <div class="form-actions">#}
+{#            <button type="submit">Create Tasks</button>#}
+{#        </div>#}
+{#    </form>#}
+{#</div>#}
+{##}
+{#<script>#}
+{#    let taskFormCount = {{ task_formset.total_form_count }};#}
+{#    const taskFormsContainer = document.getElementById('task-forms');#}
+{#    const totalFormsInput = document.getElementById('id_tasks-TOTAL_FORMS');#}
+{##}
+{#    function addTaskForm() {#}
+{#        // Clone the first task form#}
+{#        let newForm = document.querySelector('.task-form').cloneNode(true);#}
+{#        newForm.innerHTML = newForm.innerHTML.replace(/tasks-\d+/g, `tasks-${taskFormCount}`);#}
+{#        newForm.querySelectorAll('input, textarea').forEach(input => input.value = '');  // Clear inputs in the new form#}
+{#        #}
+{#        // Update the task label (Task 1, Task 2, etc.)#}
+{#        const taskLabel = newForm.querySelector('h4');#}
+{#        taskLabel.innerText = `Task ${taskFormCount + 1}`;#}
+{##}
+{#        // Append the new form#}
+{#        taskFormsContainer.appendChild(newForm);#}
+{##}
+{#        // Increment form count#}
+{#        taskFormCount++;#}
+{#        totalFormsInput.value = taskFormCount;  // Update management form total#}
+{#    }#}
+{##}
+{#    function deleteTask(button) {#}
+{#        const taskForm = button.closest('.task-form');#}
+{#        taskForm.remove();#}
+{##}
+{#        // Re-number all the remaining tasks#}
+{#        reNumberTasks();#}
+{#    }#}
+{##}
+{#    function reNumberTasks() {#}
+{#        const allTaskForms = document.querySelectorAll('.task-form h4');#}
+{#        allTaskForms.forEach((label, index) => {#}
+{#            label.innerText = `Task ${index + 1}`;#}
+{#        });#}
+{#    }#}
+{#</script>#}
+{##}
+{#</body>#}
+{#</html>#}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Tasks for {{ job.title }}</title>
+</head>
+<body>
+
+<div class="container">
+    <h2>Create Tasks for Job: {{ job.title }}</h2>
+
+    <form method="post" id="task-formset">
+        {% csrf_token %}
+        {{ task_formset.management_form }}
+
+        <div id="task-forms">
+            {% for form in task_formset %}
+                <div class="task-form">
+                    <h4 id="task-label-{{ forloop.counter }}">Task {{ forloop.counter }}</h4>
+                    {{ form.as_p }}
+                    <button type="button" class="delete-task" onclick="deleteTask(this)">Delete</button>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Button to add more tasks dynamically -->
+        <span class="add-task" onclick="addTaskForm()">Add another task</span>
+
+        <div class="form-actions">
+            <button type="submit">Create Tasks</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    let taskFormCount = {{ task_formset.total_form_count }};
+    const taskFormsContainer = document.getElementById('task-forms');
+    const totalFormsInput = document.getElementById('id_tasks-TOTAL_FORMS');
+
+    function addTaskForm() {
+        let newForm = document.querySelector('.task-form').cloneNode(true);
+        newForm.innerHTML = newForm.innerHTML.replace(/tasks-\d+/g, `tasks-${taskFormCount}`);
+        newForm.querySelectorAll('input, textarea').forEach(input => input.value = '');
+        newForm.querySelector('input[type="date"]').value = '';  // Clear date input
+        taskFormsContainer.appendChild(newForm);
+
+        // Update the task label (Task 1, Task 2, etc.)
+        const taskLabel = newForm.querySelector('h4');
+        taskLabel.innerText = `Task ${taskFormCount + 1}`;
+
+        taskFormCount++;
+        totalFormsInput.value = taskFormCount;
+    }
+
+    function deleteTask(button) {
+        const taskForm = button.closest('.task-form');
+        taskForm.remove();
+
+        // Re-number all the remaining tasks
+        reNumberTasks();
+    }
+
+    function reNumberTasks() {
+        const allTaskForms = document.querySelectorAll('.task-form h4');
+        allTaskForms.forEach((label, index) => {
+            label.innerText = `Task ${index + 1}`;
+        });
+    }
+</script>
+
+</body>
+</html>

@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'fin_app_v2.apps.FinAppV2Config'
 ]
 
 MIDDLEWARE = [

@@ -1,18 +1,66 @@
 from django import forms
+from django.contrib.auth.models import User
 from django.forms import inlineformset_factory
+
 from .models import Job, Task
 
-# Job form to create a job and assign a client
+# Job form to create a job (without assigning developers)
 class JobForm(forms.ModelForm):
     class Meta:
         model = Job
-        fields = ['title', 'client', 'assigned_users']
+        fields = ['title', 'client_email', 'client_password']  # Only job details
 
-# Task form to create tasks and assign developers
+# Task form to assign developers by email during task creation
+# class TaskForm(forms.ModelForm):
+#     assigned_users = forms.ModelMultipleChoiceField(
+#         queryset=User.objects.filter(is_staff=True),  # Filter for authorized developers
+#         widget=forms.SelectMultiple(attrs={'class': 'form-control'}),
+#         label="Assign Developers (by Email)"
+#     )
+#
+#     class Meta:
+#         model = Task
+#         fields = ['title', 'assigned_users', 'description']  # Task details and developers
+#
+#     # Overriding the label to display user emails instead of usernames
+#     def __init__(self, *args, **kwargs):
+#         super(TaskForm, self).__init__(*args, **kwargs)
+#         self.fields['assigned_users'].queryset = User.objects.filter(is_staff=True)
+#         self.fields['assigned_users'].label_from_instance = lambda obj: f"{obj.email}"  # Show email in the dropdown
+
+
+from django import forms
+from .models import Task
+from django.contrib.auth.models import User
+
+
 class TaskForm(forms.ModelForm):
+    assigned_users = forms.ModelMultipleChoiceField(
+        queryset=User.objects.filter(is_staff=True),
+        widget=forms.SelectMultiple(attrs={'class': 'form-control'}),
+        label="Assign Developers (by Email)"
+    )
+    deadline = forms.DateField(
+        widget=forms.TextInput(attrs={'type': 'date'}),  # Input for selecting a date
+        required=False,
+        label="Deadline"
+    )
+
     class Meta:
         model = Task
-        fields = ['title', 'assigned_users', 'description']
+        fields = ['title', 'description', 'assigned_users', 'task_percentage', 'progress', 'deadline']
 
-# Formset for handling multiple Task forms
-TaskFormSet = inlineformset_factory(Job, Task, form=TaskForm, extra=1)
+    def __init__(self, *args, **kwargs):
+        super(TaskForm, self).__init__(*args, **kwargs)
+        self.fields['assigned_users'].queryset = User.objects.filter(is_staff=True)
+        self.fields['assigned_users'].label_from_instance = lambda obj: f"{obj.email}"  # Show email instead of username
+
+
+# Inline formset for multiple tasks
+TaskFormSet = forms.inlineformset_factory(Job, Task, form=TaskForm, extra=1)
+
+
+# Client login form definition
+class ClientLoginForm(forms.Form):
+    email = forms.EmailField()
+    password = forms.CharField(widget=forms.PasswordInput)
