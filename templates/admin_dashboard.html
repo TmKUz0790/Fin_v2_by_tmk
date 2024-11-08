@@ -1,0 +1,475 @@
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <meta name="viewport" content="width=device-width, initial-scale=1.0">#}
+{#    <title>Admin Dashboard</title>#}
+{#    <!-- Bootstrap CSS -->#}
+{#    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">#}
+{#</head>#}
+{#<body>#}
+{#    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">#}
+{#        <div class="container-fluid">#}
+{#            <a class="navbar-brand" href="#">Admin Dashboard</a>#}
+{#            <div class="collapse navbar-collapse" id="navbarNav">#}
+{#                <ul class="navbar-nav">#}
+{#                    <li class="nav-item">#}
+{#                        <a class="nav-link active" href="{% url 'admin_dashboard' %}">Dashboard</a>#}
+{#                    </li>#}
+{#                    <li class="nav-item">#}
+{#                        <a class="nav-link" href="{% url 'job_list' %}">Job List</a>#}
+{#                    </li>#}
+{#                    <li class="nav-item">#}
+{#                        <a class="nav-link" href="{% url 'deduction_logs' %}">Deduction Logs</a>#}
+{#                    </li>#}
+{#                </ul>#}
+{#            </div>#}
+{#        </div>#}
+{#    </nav>#}
+{##}
+{#    <div class="container mt-5">#}
+{#        <h1>Admin Dashboard</h1>#}
+{##}
+{#        <!-- Section for developers and their tasks -->#}
+{#        <h2>Developers and Their Tasks</h2>#}
+{#        <div class="table-responsive">#}
+{#            <table class="table table-bordered">#}
+{#                <thead class="table-dark">#}
+{#                    <tr>#}
+{#                        <th>Developer</th>#}
+{#                        <th>Tasks</th>#}
+{#                        <th>Balance</th>#}
+{#                        <th>Action</th>#}
+{#                    </tr>#}
+{#                </thead>#}
+{#                <tbody>#}
+{#                    {% for developer_info in developer_data %}#}
+{#                    <tr>#}
+{#                        <td>{{ developer_info.developer.username }} ({{ developer_info.developer.email }})</td>#}
+{#                        <td>#}
+{#                            <ul>#}
+{#                                {% for task_info in developer_info.tasks %}#}
+{#                                <li class="#}
+{#                                    {% if task_info.task.progress == 100 %}#}
+{#                                        ""#}
+{#                                    {% elif task_info.days_until_deadline > 10 %}#}
+{#                                        task-green#}
+{#                                    {% elif task_info.days_until_deadline <= 10 and task_info.days_until_deadline > 5 %}#}
+{#                                        task-yellow#}
+{#                                    {% elif task_info.days_until_deadline <= 5 and task_info.days_until_deadline >= 0 %}#}
+{#                                        task-red#}
+{#                                    {% endif %}#}
+{#                                ">#}
+{#                                    {{ task_info.task.title }} - Progress: {{ task_info.task.progress }}% - Payment: {{ task_info.task.money_for_task }} USD - Deadline: {{ task_info.task.deadline }}#}
+{#                                    #}
+{#                                    {% if task_info.task.progress == 100 %}#}
+{#                                        <span class="done">✔️ Done</span>#}
+{#                                    {% elif task_info.task.progress < 100 and task_info.days_until_deadline < 0 %}#}
+{#                                        <span class="overdue">❌ Overdue</span>#}
+{#                                    {% endif %}#}
+{#                                </li>#}
+{#                                {% endfor %}#}
+{#                            </ul>#}
+{#                        </td>#}
+{#                        <td>{{ developer_info.balance }} USD</td>#}
+{#                        <td>#}
+{#                            <a href="{% url 'deduct_balance' developer_info.developer.id %}" class="btn btn-danger">Deduct</a>#}
+{#                        </td>#}
+{#                    </tr>#}
+{#                    {% endfor %}#}
+{#                </tbody>#}
+{#            </table>#}
+{#        </div>#}
+{#    </div>#}
+{#    #}
+{#    <!-- Bootstrap Scripts -->#}
+{#    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>#}
+{#</body>#}
+{#</html>#}
+
+
+
+{##}
+{##}
+{##}
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <title>Admin Dashboard</title>#}
+{#    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">#}
+{#    <style>#}
+{#        /* Styles for task statuses */#}
+{#        .task-green { color: green; }#}
+{#        .task-yellow { color: #ffc107; }#}
+{#        .task-red { color: #dc3545; }#}
+{#        .done { color: green; font-weight: bold; }#}
+{#        .overdue { color: red; font-weight: bold; }#}
+{#        /* Additional styles */#}
+{#        .navbar-brand, .nav-link { font-weight: 600; color: #fff !important; }#}
+{#        body { background-color: #f8f9fa; }#}
+{#        .container { margin-top: 30px; }#}
+{#        .table thead th { background-color: #343a40; color: #fff; }#}
+{#        .btn-info { background-color: #17a2b8; border: none; }#}
+{#        .btn-info:hover { background-color: #138496; }#}
+{#        .btn-danger { background-color: #dc3545; border: none; }#}
+{#        .btn-danger:hover { background-color: #c82333; }#}
+{#    </style>#}
+{#</head>#}
+{#<body>#}
+{#    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">#}
+{#        <div class="container-fluid">#}
+{#            <a class="navbar-brand" href="{% url 'admin_dashboard' %}">Admin Dashboard</a>#}
+{#            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavbar" aria-controls="adminNavbar" aria-expanded="false" aria-label="Toggle navigation">#}
+{#                <span class="navbar-toggler-icon"></span>#}
+{#            </button>#}
+{#            <div class="collapse navbar-collapse" id="adminNavbar">#}
+{#                <ul class="navbar-nav me-auto mb-2 mb-lg-0">#}
+{#                    <li class="nav-item">#}
+{#                        <a class="nav-link active" aria-current="page" href="{% url 'admin_dashboard' %}">Dashboard</a>#}
+{#                    </li>#}
+{#                    <li class="nav-item">#}
+{#                        <a class="nav-link" href="{% url 'job_list' %}">Job List</a>#}
+{#                    </li>#}
+{#                </ul>#}
+{#            </div>#}
+{#        </div>#}
+{#    </nav>#}
+{##}
+{#    <div class="container">#}
+{#        <h1 class="mb-4">Admin Dashboard</h1>#}
+{##}
+{#        <h2 class="mb-3">Developers and Their Tasks</h2>#}
+{#        <div class="table-responsive mb-5">#}
+{#            <table class="table table-bordered">#}
+{#                <thead>#}
+{#                    <tr>#}
+{#                        <th>Developer</th>#}
+{#                        <th>Tasks</th>#}
+{#                        <th>Balance</th>#}
+{#                        <th>Actions</th>#}
+{#                    </tr>#}
+{#                </thead>#}
+{#                <tbody>#}
+{#                    {% for developer_info in developer_data %}#}
+{#                    <tr>#}
+{#                        <td><strong>{{ developer_info.developer.username }}</strong> ({{ developer_info.developer.email }})</td>#}
+{#                        <td>#}
+{#                            <ul>#}
+{#                                {% for task_info in developer_info.tasks %}#}
+{#                                <li class="#}
+{#                                    {% if task_info.task.progress == 100 %} done#}
+{#                                    {% elif task_info.days_until_deadline is not None %}#}
+{#                                        {% if task_info.days_until_deadline > 10 %} task-green#}
+{#                                        {% elif task_info.days_until_deadline <= 10 and task_info.days_until_deadline > 5 %} task-yellow#}
+{#                                        {% elif task_info.days_until_deadline <= 5 and task_info.days_until_deadline >= 0 %} task-red#}
+{#                                        {% else %} overdue {% endif %}#}
+{#                                    {% endif %}#}
+{#                                ">#}
+{#                                    <strong>{{ task_info.task.title }}</strong>#}
+{#                                    <ul>#}
+{#                                        <li>Progress: {{ task_info.task.progress }}%</li>#}
+{#                                        <li>Payment: {{ task_info.task.money_for_task }} USD</li>#}
+{#                                        {% if task_info.task.deadline %}#}
+{#                                            <li>Deadline: {{ task_info.task.deadline|date:"Y-m-d" }}</li>#}
+{#                                        {% else %}#}
+{#                                            <li>Deadline: No deadline</li>#}
+{#                                        {% endif %}#}
+{#                                        {% if task_info.task.progress == 100 %}#}
+{#                                            <li class="done">✔️ Done</li>#}
+{#                                        {% elif task_info.task.progress < 100 and task_info.days_until_deadline is not None and task_info.days_until_deadline < 0 %}#}
+{#                                            <li class="overdue">❌ Overdue</li>#}
+{#                                        {% endif %}#}
+{#                                    </ul>#}
+{#                                </li>#}
+{#                                {% endfor %}#}
+{#                            </ul>#}
+{#                        </td>#}
+{#                        <td>{{ developer_info.balance }} USD</td>#}
+{#                        <td><a href="{% url 'deduct_balance' developer_info.developer.id %}" class="btn btn-danger mb-2">Deduct</a></td>#}
+{#                    </tr>#}
+{#                    {% empty %}#}
+{#                    <tr><td colspan="4">No developers with tasks available.</td></tr>#}
+{#                    {% endfor %}#}
+{#                </tbody>#}
+{#            </table>#}
+{#        </div>#}
+{##}
+{#        <h2 class="mb-3">All Deduction Logs</h2>#}
+{#        <div class="table-responsive">#}
+{#            {% if all_deduction_logs %}#}
+{#            <table class="table table-bordered">#}
+{#                <thead>#}
+{#                    <tr>#}
+{#                        <th>Developer</th>#}
+{#                        <th>Amount (USD)</th>#}
+{#                        <th>Deducted By</th>#}
+{#                        <th>Date</th>#}
+{#                    </tr>#}
+{#                </thead>#}
+{#                <tbody>#}
+{#                    {% for log in all_deduction_logs %}#}
+{#                    <tr>#}
+{#                        <td>{{ log.developer.username }}</td>#}
+{#                        <td>{{ log.deduction_amount }}</td>#}
+{#                        <td>{{ log.deducted_by.username }}</td>#}
+{#                        <td>{{ log.deduction_date|date:"Y-m-d H:i:s" }}</td>#}
+{#                    </tr>#}
+{#                    {% endfor %}#}
+{#                </tbody>#}
+{#            </table>#}
+{#            {% else %}#}
+{#            <p>No deduction logs available.</p>#}
+{#            {% endif %}#}
+{#        </div>#}
+{#    </div>#}
+{##}
+{#    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>#}
+{#</body>#}
+{#</html>#}
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; }
+        .container { margin-top: 30px; }
+        .table thead th { background-color: #343a40; color: #fff; }
+        .done { color: green; font-weight: bold; }
+        .overdue { color: red; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="mb-4">Admin Dashboard</h1>
+
+        <h2 class="mb-3">Developers and Their Tasks</h2>
+        <div class="table-responsive mb-5">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Developer</th>
+                        <th>Tasks</th>
+                        <th>Balance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for developer_info in developer_data %}
+                    <tr>
+                        <td>{{ developer_info.developer.username }} ({{ developer_info.developer.email }})</td>
+                        <td>
+                            <ul>
+                                {% for task_info in developer_info.tasks %}
+                                <li>
+                                    <strong>{{ task_info.task.title }}</strong>
+                                    <ul>
+                                        <li>Progress: {{ task_info.task.progress }}%</li>
+                                        <li>Payment: {{ task_info.task.money_for_task }} USD</li>
+                                        {% if task_info.task.deadline %}
+                                            <li>Deadline: {{ task_info.task.deadline|date:"Y-m-d" }}</li>
+                                        {% else %}
+                                            <li>Deadline: No deadline</li>
+                                        {% endif %}
+                                        {% if task_info.task.progress == 100 %}
+                                            <li class="done">✔️ Done</li>
+                                        {% elif task_info.days_until_deadline is not None and task_info.days_until_deadline < 0 %}
+                                            <li class="overdue">❌ Overdue</li>
+                                        {% endif %}
+                                    </ul>
+                                </li>
+                                {% endfor %}
+                            </ul>
+
+                            <!-- Pagination controls for each developer's tasks -->
+                            <nav aria-label="Task pagination">
+                                <ul class="pagination">
+                                    {% if developer_info.page_obj.has_previous %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page_{{ developer_info.developer.id }}={{ developer_info.page_obj.previous_page_number }}">Previous</a>
+                                    </li>
+                                    {% endif %}
+                                    <li class="page-item disabled">
+                                        <span class="page-link">Page {{ developer_info.page_obj.number }} of {{ developer_info.paginator.num_pages }}</span>
+                                    </li>
+                                    {% if developer_info.page_obj.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page_{{ developer_info.developer.id }}={{ developer_info.page_obj.next_page_number }}">Next</a>
+                                    </li>
+                                    {% endif %}
+                                </ul>
+                            </nav>
+                        </td>
+                        <td>{{ developer_info.balance }} USD</td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="3">No developers or tasks available.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if unassigned_tasks %}
+        <h2 class="mb-3">Unassigned Tasks</h2>
+        <div class="table-responsive mb-5">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Task Title</th>
+                        <th>Progress</th>
+                        <th>Deadline</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for task in unassigned_tasks %}
+                    <tr>
+                        <td>{{ task.title }}</td>
+                        <td>{{ task.progress }}%</td>
+                        <td>{{ task.deadline|date:"Y-m-d" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+
+        <h2 class="mb-3">All Deduction Logs</h2>
+        <div class="table-responsive">
+            {% if all_deduction_logs %}
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Developer</th>
+                        <th>Amount (USD)</th>
+                        <th>Deducted By</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in all_deduction_logs %}
+                    <tr>
+                        <td>{{ log.developer.username }}</td>
+                        <td>{{ log.deduction_amount }}</td>
+                        <td>{{ log.deducted_by.username }}</td>
+                        <td>{{ log.deduction_date|date:"Y-m-d H:i:s" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p>No deduction logs available.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <title>Admin Dashboard</title>#}
+{#    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">#}
+{#    <style>#}
+{#        body { background-color: #f8f9fa; }#}
+{#        .container { margin-top: 30px; }#}
+{#        .table thead th { background-color: #343a40; color: #fff; }#}
+{#        .done { color: green; font-weight: bold; }#}
+{#        .overdue { color: red; font-weight: bold; }#}
+{#    </style>#}
+{#</head>#}
+{#<body>#}
+{#    <div class="container">#}
+{#        <h1 class="mb-4">Admin Dashboard</h1>#}
+{##}
+{#        <h2 class="mb-3">Developers and Their Tasks</h2>#}
+{#        <div class="table-responsive mb-5">#}
+{#            <table class="table table-bordered">#}
+{#                <thead>#}
+{#                    <tr>#}
+{#                        <th>Developer</th>#}
+{#                        <th>Tasks</th>#}
+{#                        <th>Balance</th>#}
+{#                    </tr>#}
+{#                </thead>#}
+{#                <tbody>#}
+{#                    {% for developer_info in developer_data %}#}
+{#                    <tr>#}
+{#                        <td>{{ developer_info.developer.username }} ({{ developer_info.developer.email }})</td>#}
+{#                        <td>#}
+{#                            <ul>#}
+{#                                {% for task_info in developer_info.tasks %}#}
+{#                                <li>#}
+{#                                    <strong>{{ task_info.task.title }}</strong>#}
+{#                                    <ul>#}
+{#                                        <li>Progress: {{ task_info.task.progress }}%</li>#}
+{#                                        <li>Payment: {{ task_info.task.money_for_task }} USD</li>#}
+{#                                        {% if task_info.task.deadline %}#}
+{#                                            <li>Deadline: {{ task_info.task.deadline|date:"Y-m-d" }}</li>#}
+{#                                        {% else %}#}
+{#                                            <li>Deadline: No deadline</li>#}
+{#                                        {% endif %}#}
+{#                                        {% if task_info.task.progress == 100 %}#}
+{#                                            <li class="done">✔️ Done</li>#}
+{#                                        {% elif task_info.days_until_deadline is not None and task_info.days_until_deadline < 0 %}#}
+{#                                            <li class="overdue">❌ Overdue</li>#}
+{#                                        {% endif %}#}
+{#                                    </ul>#}
+{#                                </li>#}
+{#                                {% endfor %}#}
+{#                            </ul>#}
+{#                        </td>#}
+{#                        <td>{{ developer_info.balance }} USD</td>#}
+{#                    </tr>#}
+{#                    {% empty %}#}
+{#                    <tr><td colspan="3">No developers or tasks available.</td></tr>#}
+{#                    {% endfor %}#}
+{#                </tbody>#}
+{#            </table>#}
+{#        </div>#}
+{##}
+{#        <h2 class="mb-3">All Deduction Logs</h2>#}
+{#        <div class="table-responsive">#}
+{#            {% if all_deduction_logs %}#}
+{#            <table class="table table-bordered">#}
+{#                <thead>#}
+{#                    <tr>#}
+{#                        <th>Developer</th>#}
+{#                        <th>Amount (USD)</th>#}
+{#                        <th>Deducted By</th>#}
+{#                        <th>Date</th>#}
+{#                    </tr>#}
+{#                </thead>#}
+{#                <tbody>#}
+{#                    {% for log in all_deduction_logs %}#}
+{#                    <tr>#}
+{#                        <td>{{ log.developer.username }}</td>#}
+{#                        <td>{{ log.deduction_amount }}</td>#}
+{#                        <td>{{ log.deducted_by.username }}</td>#}
+{#                        <td>{{ log.deduction_date|date:"Y-m-d H:i:s" }}</td>#}
+{#                    </tr>#}
+{#                    {% endfor %}#}
+{#                </tbody>#}
+{#            </table>#}
+{#            {% else %}#}
+{#            <p>No deduction logs available.</p>#}
+{#            {% endif %}#}
+{#        </div>#}
+{#    </div>#}
+{##}
+{#    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>#}
+{#</body>#}
+{#</html>#}

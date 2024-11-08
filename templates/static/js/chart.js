@@ -1,7 +1,7 @@
 // var ctx = document.getElementById('myChart').getContext('2d');
 // var myChart;
 
-// function createChart(tasks, progress, colors) {
+// function createChart(tasks, progress) {
 //   if (myChart) {
 //     myChart.destroy(); // Удаляем старый график
 //   }
@@ -30,7 +30,7 @@
 //   fetch('/data/')
 //     .then((response) => response.json())
 //     .then((data) => {
-//       createChart(data.tasks, data.progress, data.colors);
+//       createChart(data.tasks, data.progress);
 //     });
 // }
 
@@ -38,19 +38,21 @@
 
 // updateData();
 
-var xValues = [
-  'TASK 1',
-  'TASK 2',
-  'TASK 3',
-  'TASK 4',
-  'TASK 5',
-  'TASK 6',
-  'TASK 7',
-  'TASK 8',
-  'TASK 9',
-  'TASK 10',
-];
-var yValues = [90, 75, 40, 25, 60, 50, 80, 100, 52, 60];
+var taskTitle = Array.from(document.querySelectorAll('.taskTitle')).map(
+  (el) => el.textContent
+);
+var taskProgress = Array.from(document.querySelectorAll('.taskProgress')).map(
+  (el) => parseFloat(el.textContent)
+);
+
+Chart.defaults.backgroundColor = '#fff';
+Chart.defaults.borderColor = '#fff';
+Chart.defaults.color = '#000';
+Chart.defaults.font.size = 12;
+Chart.defaults.font.family = "'Inter', sans-serif";
+
+var xValues = taskTitle;
+var yValues = taskProgress;
 var barColors = '#4aaff7';
 Chart.defaults.backgroundColor = '#fff';
 Chart.defaults.borderColor = '#fff';
@@ -70,11 +72,10 @@ new Chart('myChart', {
     ],
   },
   options: {
+    maintainAspectRatio: false,
+    responsive: true,
     legend: { display: true },
-    title: {
-      display: false,
-      text: 'TASK PROGRESS %',
-    },
+
     plugins: {
       legend: {
         labels: {
