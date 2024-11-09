@@ -2,110 +2,14 @@
 {#<html lang="en">#}
 {#<head>#}
 {#    <meta charset="UTF-8">#}
-{#    <meta name="viewport" content="width=device-width, initial-scale=1.0">#}
-{#    <title>Admin Dashboard</title>#}
-{#    <!-- Bootstrap CSS -->#}
-{#    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">#}
-{#</head>#}
-{#<body>#}
-{#    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">#}
-{#        <div class="container-fluid">#}
-{#            <a class="navbar-brand" href="#">Admin Dashboard</a>#}
-{#            <div class="collapse navbar-collapse" id="navbarNav">#}
-{#                <ul class="navbar-nav">#}
-{#                    <li class="nav-item">#}
-{#                        <a class="nav-link active" href="{% url 'admin_dashboard' %}">Dashboard</a>#}
-{#                    </li>#}
-{#                    <li class="nav-item">#}
-{#                        <a class="nav-link" href="{% url 'job_list' %}">Job List</a>#}
-{#                    </li>#}
-{#                    <li class="nav-item">#}
-{#                        <a class="nav-link" href="{% url 'deduction_logs' %}">Deduction Logs</a>#}
-{#                    </li>#}
-{#                </ul>#}
-{#            </div>#}
-{#        </div>#}
-{#    </nav>#}
-{##}
-{#    <div class="container mt-5">#}
-{#        <h1>Admin Dashboard</h1>#}
-{##}
-{#        <!-- Section for developers and their tasks -->#}
-{#        <h2>Developers and Their Tasks</h2>#}
-{#        <div class="table-responsive">#}
-{#            <table class="table table-bordered">#}
-{#                <thead class="table-dark">#}
-{#                    <tr>#}
-{#                        <th>Developer</th>#}
-{#                        <th>Tasks</th>#}
-{#                        <th>Balance</th>#}
-{#                        <th>Action</th>#}
-{#                    </tr>#}
-{#                </thead>#}
-{#                <tbody>#}
-{#                    {% for developer_info in developer_data %}#}
-{#                    <tr>#}
-{#                        <td>{{ developer_info.developer.username }} ({{ developer_info.developer.email }})</td>#}
-{#                        <td>#}
-{#                            <ul>#}
-{#                                {% for task_info in developer_info.tasks %}#}
-{#                                <li class="#}
-{#                                    {% if task_info.task.progress == 100 %}#}
-{#                                        ""#}
-{#                                    {% elif task_info.days_until_deadline > 10 %}#}
-{#                                        task-green#}
-{#                                    {% elif task_info.days_until_deadline <= 10 and task_info.days_until_deadline > 5 %}#}
-{#                                        task-yellow#}
-{#                                    {% elif task_info.days_until_deadline <= 5 and task_info.days_until_deadline >= 0 %}#}
-{#                                        task-red#}
-{#                                    {% endif %}#}
-{#                                ">#}
-{#                                    {{ task_info.task.title }} - Progress: {{ task_info.task.progress }}% - Payment: {{ task_info.task.money_for_task }} USD - Deadline: {{ task_info.task.deadline }}#}
-{#                                    #}
-{#                                    {% if task_info.task.progress == 100 %}#}
-{#                                        <span class="done">✔️ Done</span>#}
-{#                                    {% elif task_info.task.progress < 100 and task_info.days_until_deadline < 0 %}#}
-{#                                        <span class="overdue">❌ Overdue</span>#}
-{#                                    {% endif %}#}
-{#                                </li>#}
-{#                                {% endfor %}#}
-{#                            </ul>#}
-{#                        </td>#}
-{#                        <td>{{ developer_info.balance }} USD</td>#}
-{#                        <td>#}
-{#                            <a href="{% url 'deduct_balance' developer_info.developer.id %}" class="btn btn-danger">Deduct</a>#}
-{#                        </td>#}
-{#                    </tr>#}
-{#                    {% endfor %}#}
-{#                </tbody>#}
-{#            </table>#}
-{#        </div>#}
-{#    </div>#}
-{#    #}
-{#    <!-- Bootstrap Scripts -->#}
-{#    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>#}
-{#</body>#}
-{#</html>#}
-
-
-
-{##}
-{##}
-{##}
-{#<!DOCTYPE html>#}
-{#<html lang="en">#}
-{#<head>#}
-{#    <meta charset="UTF-8">#}
 {#    <title>Admin Dashboard</title>#}
 {#    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">#}
 {#    <style>#}
-{#        /* Styles for task statuses */#}
 {#        .task-green { color: green; }#}
 {#        .task-yellow { color: #ffc107; }#}
 {#        .task-red { color: #dc3545; }#}
 {#        .done { color: green; font-weight: bold; }#}
 {#        .overdue { color: red; font-weight: bold; }#}
-{#        /* Additional styles */#}
 {#        .navbar-brand, .nav-link { font-weight: 600; color: #fff !important; }#}
 {#        body { background-color: #f8f9fa; }#}
 {#        .container { margin-top: 30px; }#}
@@ -129,7 +33,10 @@
 {#                        <a class="nav-link active" aria-current="page" href="{% url 'admin_dashboard' %}">Dashboard</a>#}
 {#                    </li>#}
 {#                    <li class="nav-item">#}
-{#                        <a class="nav-link" href="{% url 'job_list' %}">Job List</a>#}
+{#                        <a class="btn btn-info nav-link" href="{% url 'job_list' %}">Job List</a>#}
+{#                    </li>#}
+{#                    <li class="nav-item">#}
+{#                        <a class="btn btn-info nav-link" href="{% url 'deduction_logs_admin' %}">All Deduction Logs</a>#}
 {#                    </li>#}
 {#                </ul>#}
 {#            </div>#}
@@ -146,6 +53,7 @@
 {#                    <tr>#}
 {#                        <th>Developer</th>#}
 {#                        <th>Tasks</th>#}
+{#                        <th>Status Counts</th>#}
 {#                        <th>Balance</th>#}
 {#                        <th>Actions</th>#}
 {#                    </tr>#}
@@ -184,57 +92,81 @@
 {#                                </li>#}
 {#                                {% endfor %}#}
 {#                            </ul>#}
+{##}
+{#                            <!-- Task Pagination Controls for Each Developer -->#}
+{#                            <nav aria-label="Task pagination">#}
+{#                                <ul class="pagination">#}
+{#                                    {% if developer_info.page_obj.has_previous %}#}
+{#                                    <li class="page-item">#}
+{#                                        <a class="page-link" href="?page_{{ developer_info.developer.id }}={{ developer_info.page_obj.previous_page_number }}" aria-label="Previous">#}
+{#                                            <span aria-hidden="true">&laquo;</span>#}
+{#                                        </a>#}
+{#                                    </li>#}
+{#                                    {% endif %}#}
+{#                                    {% for num in developer_info.page_obj.paginator.page_range %}#}
+{#                                    <li class="page-item {% if developer_info.page_obj.number == num %}active{% endif %}">#}
+{#                                        <a class="page-link" href="?page_{{ developer_info.developer.id }}={{ num }}">{{ num }}</a>#}
+{#                                    </li>#}
+{#                                    {% endfor %}#}
+{#                                    {% if developer_info.page_obj.has_next %}#}
+{#                                    <li class="page-item">#}
+{#                                        <a class="page-link" href="?page_{{ developer_info.developer.id }}={{ developer_info.page_obj.next_page_number }}" aria-label="Next">#}
+{#                                            <span aria-hidden="true">&raquo;</span>#}
+{#                                        </a>#}
+{#                                    </li>#}
+{#                                    {% endif %}#}
+{#                                </ul>#}
+{#                            </nav>#}
+{#                        </td>#}
+{#                        <td>#}
+{#                            <ul>#}
+{#                                <li><span class="task-green">Green (Safe):</span> {{ developer_info.status_counts.task_green }}</li>#}
+{#                                <li><span class="task-yellow">Yellow (Warning):</span> {{ developer_info.status_counts.task_yellow }}</li>#}
+{#                                <li><span class="task-red">Red (Urgent):</span> {{ developer_info.status_counts.task_red }}</li>#}
+{#                                <li><span class="overdue">Overdue:</span> {{ developer_info.status_counts.overdue }}</li>#}
+{#                            </ul>#}
 {#                        </td>#}
 {#                        <td>{{ developer_info.balance }} USD</td>#}
 {#                        <td><a href="{% url 'deduct_balance' developer_info.developer.id %}" class="btn btn-danger mb-2">Deduct</a></td>#}
 {#                    </tr>#}
 {#                    {% empty %}#}
-{#                    <tr><td colspan="4">No developers with tasks available.</td></tr>#}
+{#                    <tr><td colspan="5">No developers with tasks available.</td></tr>#}
 {#                    {% endfor %}#}
 {#                </tbody>#}
 {#            </table>#}
 {#        </div>#}
 {##}
-{#        <h2 class="mb-3">All Deduction Logs</h2>#}
-{#        <div class="table-responsive">#}
-{#            {% if all_deduction_logs %}#}
-{#            <table class="table table-bordered">#}
-{#                <thead>#}
-{#                    <tr>#}
-{#                        <th>Developer</th>#}
-{#                        <th>Amount (USD)</th>#}
-{#                        <th>Deducted By</th>#}
-{#                        <th>Date</th>#}
-{#                    </tr>#}
-{#                </thead>#}
-{#                <tbody>#}
-{#                    {% for log in all_deduction_logs %}#}
-{#                    <tr>#}
-{#                        <td>{{ log.developer.username }}</td>#}
-{#                        <td>{{ log.deduction_amount }}</td>#}
-{#                        <td>{{ log.deducted_by.username }}</td>#}
-{#                        <td>{{ log.deduction_date|date:"Y-m-d H:i:s" }}</td>#}
-{#                    </tr>#}
-{#                    {% endfor %}#}
-{#                </tbody>#}
-{#            </table>#}
-{#            {% else %}#}
-{#            <p>No deduction logs available.</p>#}
-{#            {% endif %}#}
-{#        </div>#}
+{#        <!-- Pagination Controls for Developers -->#}
+{#        <nav aria-label="Developer pagination">#}
+{#            <ul class="pagination justify-content-center">#}
+{#                {% if developer_data.has_previous %}#}
+{#                    <li class="page-item">#}
+{#                        <a class="page-link" href="?developer_page={{ developer_data.previous_page_number }}" aria-label="Previous">#}
+{#                            <span aria-hidden="true">&laquo; Previous</span>#}
+{#                        </a>#}
+{#                    </li>#}
+{#                {% endif %}#}
+{#                {% for num in developer_data.paginator.page_range %}#}
+{#                    <li class="page-item {% if developer_data.number == num %}active{% endif %}">#}
+{#                        <a class="page-link" href="?developer_page={{ num }}">{{ num }}</a>#}
+{#                    </li>#}
+{#                {% endfor %}#}
+{#                {% if developer_data.has_next %}#}
+{#                    <li class="page-item">#}
+{#                        <a class="page-link" href="?developer_page={{ developer_data.next_page_number }}" aria-label="Next">#}
+{#                            <span aria-hidden="true">Next &raquo;</span>#}
+{#                        </a>#}
+{#                    </li>#}
+{#                {% endif %}#}
+{#            </ul>#}
+{#        </nav>#}
 {#    </div>#}
 {##}
 {#    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>#}
 {#</body>#}
 {#</html>#}
-
-
-
-
-
-
-
-
+{##}
+{##}
 
 
 <!DOCTYPE html>
@@ -244,232 +176,219 @@
     <title>Admin Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { background-color: #f8f9fa; }
-        .container { margin-top: 30px; }
-        .table thead th { background-color: #343a40; color: #fff; }
-        .done { color: green; font-weight: bold; }
-        .overdue { color: red; font-weight: bold; }
+        /* General Styles */
+        body {
+            background-color: #F5EFE9;
+            font-family: 'Arial', sans-serif;
+            color: #333;
+        }
+        
+        /* Sidebar Styling */
+        .sidebar {
+            background-color: #1C1B1B;
+            color: #fff;
+            width: 250px;
+            padding-top: 20px;
+            position: fixed;
+            height: 100vh;
+        }
+        .sidebar .nav-link, .sidebar .navbar-brand {
+            color: #fff;
+            font-weight: 500;
+        }
+        .sidebar .nav-link.active, .sidebar .nav-link:hover {
+            background-color: #F28A2A;
+            color: #fff;
+        }
+        .sidebar .btn-create {
+            background-color: #F28A2A;
+            color: #fff;
+            border: none;
+            margin: 20px;
+            padding: 10px 20px;
+            font-weight: bold;
+            border-radius: 5px;
+        }
+        
+        /* Main Content */
+        .content {
+            margin-left: 270px;
+            padding: 20px;
+        }
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .content-header h1 {
+            font-weight: bold;
+        }
+        
+        /* Overview Cards */
+        .overview-cards {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .overview-card {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            text-align: center;
+        }
+        
+        /* Project Summary Table */
+        .project-summary-table {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .project-summary-table table {
+            width: 100%;
+        }
+        
+        /* Circular Progress */
+        .progress-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Today's Task Section */
+        .today-task {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .today-task ul {
+            list-style: none;
+            padding: 0;
+        }
+        .today-task li {
+            margin: 10px 0;
+            font-weight: bold;
+            color: #F28A2A;
+        }
+        
+        /* Projects Workload */
+        .projects-workload {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1 class="mb-4">Admin Dashboard</h1>
 
-        <h2 class="mb-3">Developers and Their Tasks</h2>
-        <div class="table-responsive mb-5">
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Developer</th>
-                        <th>Tasks</th>
-                        <th>Balance</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for developer_info in developer_data %}
-                    <tr>
-                        <td>{{ developer_info.developer.username }} ({{ developer_info.developer.email }})</td>
-                        <td>
-                            <ul>
-                                {% for task_info in developer_info.tasks %}
-                                <li>
-                                    <strong>{{ task_info.task.title }}</strong>
-                                    <ul>
-                                        <li>Progress: {{ task_info.task.progress }}%</li>
-                                        <li>Payment: {{ task_info.task.money_for_task }} USD</li>
-                                        {% if task_info.task.deadline %}
-                                            <li>Deadline: {{ task_info.task.deadline|date:"Y-m-d" }}</li>
-                                        {% else %}
-                                            <li>Deadline: No deadline</li>
-                                        {% endif %}
-                                        {% if task_info.task.progress == 100 %}
-                                            <li class="done">✔️ Done</li>
-                                        {% elif task_info.days_until_deadline is not None and task_info.days_until_deadline < 0 %}
-                                            <li class="overdue">❌ Overdue</li>
-                                        {% endif %}
-                                    </ul>
-                                </li>
-                                {% endfor %}
-                            </ul>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="navbar-brand text-center">Promage</div>
+        <button class="btn btn-create">Create new project</button>
+        <nav class="nav flex-column">
+            <a class="nav-link active" href="#">Dashboard</a>
+            <a class="nav-link" href="#">Projects</a>
+            <a class="nav-link" href="#">Tasks</a>
+            <a class="nav-link" href="#">Time log</a>
+            <a class="nav-link" href="#">Resource mgmt</a>
+            <a class="nav-link" href="#">Users</a>
+            <a class="nav-link" href="#">Project template</a>
+            <a class="nav-link" href="#">Menu settings</a>
+        </nav>
+    </div>
 
-                            <!-- Pagination controls for each developer's tasks -->
-                            <nav aria-label="Task pagination">
-                                <ul class="pagination">
-                                    {% if developer_info.page_obj.has_previous %}
-                                    <li class="page-item">
-                                        <a class="page-link" href="?page_{{ developer_info.developer.id }}={{ developer_info.page_obj.previous_page_number }}">Previous</a>
-                                    </li>
-                                    {% endif %}
-                                    <li class="page-item disabled">
-                                        <span class="page-link">Page {{ developer_info.page_obj.number }} of {{ developer_info.paginator.num_pages }}</span>
-                                    </li>
-                                    {% if developer_info.page_obj.has_next %}
-                                    <li class="page-item">
-                                        <a class="page-link" href="?page_{{ developer_info.developer.id }}={{ developer_info.page_obj.next_page_number }}">Next</a>
-                                    </li>
-                                    {% endif %}
-                                </ul>
-                            </nav>
-                        </td>
-                        <td>{{ developer_info.balance }} USD</td>
-                    </tr>
-                    {% empty %}
-                    <tr><td colspan="3">No developers or tasks available.</td></tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+    <!-- Main Content -->
+    <div class="content">
+        <!-- Header -->
+        <div class="content-header">
+            <h1>Dashboard</h1>
+            <input type="search" class="form-control" placeholder="Search for anything..." style="width: 250px;">
         </div>
 
-        {% if unassigned_tasks %}
-        <h2 class="mb-3">Unassigned Tasks</h2>
-        <div class="table-responsive mb-5">
-            <table class="table table-bordered">
+        <!-- Overview Cards -->
+        <div class="overview-cards">
+            <div class="overview-card">
+                <h4>Total Revenue</h4>
+                <h3>$53,009.89</h3>
+                <p>12% increase from last month</p>
+            </div>
+            <div class="overview-card">
+                <h4>Projects</h4>
+                <h3>95 / 100</h3>
+                <p>10% decrease from last month</p>
+            </div>
+            <div class="overview-card">
+                <h4>Time Spent</h4>
+                <h3>1022 / 1300 Hrs</h3>
+                <p>8% increase from last month</p>
+            </div>
+            <div class="overview-card">
+                <h4>Resources</h4>
+                <h3>101 / 120</h3>
+                <p>2% increase from last month</p>
+            </div>
+        </div>
+
+        <!-- Project Summary Table -->
+        <div class="project-summary-table">
+            <h5>Project Summary</h5>
+            <table class="table">
                 <thead>
                     <tr>
-                        <th>Task Title</th>
+                        <th>Name</th>
+                        <th>Project Manager</th>
+                        <th>Due Date</th>
+                        <th>Status</th>
                         <th>Progress</th>
-                        <th>Deadline</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for task in unassigned_tasks %}
                     <tr>
-                        <td>{{ task.title }}</td>
-                        <td>{{ task.progress }}%</td>
-                        <td>{{ task.deadline|date:"Y-m-d" }}</td>
+                        <td>Nelsa Web Development</td>
+                        <td>Om Prakash Sao</td>
+                        <td>May 25, 2023</td>
+                        <td>Completed</td>
+                        <td>100%</td>
                     </tr>
-                    {% endfor %}
+                    <!-- Add more rows as needed -->
                 </tbody>
             </table>
         </div>
-        {% endif %}
 
-        <h2 class="mb-3">All Deduction Logs</h2>
-        <div class="table-responsive">
-            {% if all_deduction_logs %}
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Developer</th>
-                        <th>Amount (USD)</th>
-                        <th>Deducted By</th>
-                        <th>Date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for log in all_deduction_logs %}
-                    <tr>
-                        <td>{{ log.developer.username }}</td>
-                        <td>{{ log.deduction_amount }}</td>
-                        <td>{{ log.deducted_by.username }}</td>
-                        <td>{{ log.deduction_date|date:"Y-m-d H:i:s" }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            {% else %}
-            <p>No deduction logs available.</p>
-            {% endif %}
+        <!-- Progress Indicator -->
+        <div class="progress-container">
+            <h5>Overall Progress</h5>
+            <div class="progress-circle" style="font-size: 72px; color: #27ae60;">72%</div>
+            <p>95 Total projects | 26 Completed | 35 Delayed | 35 Ongoing</p>
+        </div>
+
+        <!-- Today's Tasks -->
+        <div class="today-task">
+            <h5>Today's Tasks</h5>
+            <ul>
+                <li>Create a user flow for social application design</li>
+                <li>Landing page design for Fintech project</li>
+                <!-- Add more tasks as needed -->
+            </ul>
+        </div>
+
+        <!-- Projects Workload -->
+        <div class="projects-workload">
+            <h5>Projects Workload</h5>
+            <!-- Graph content goes here -->
+            <p>Last 3 months workload chart</p>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-
-{#<!DOCTYPE html>#}
-{#<html lang="en">#}
-{#<head>#}
-{#    <meta charset="UTF-8">#}
-{#    <title>Admin Dashboard</title>#}
-{#    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">#}
-{#    <style>#}
-{#        body { background-color: #f8f9fa; }#}
-{#        .container { margin-top: 30px; }#}
-{#        .table thead th { background-color: #343a40; color: #fff; }#}
-{#        .done { color: green; font-weight: bold; }#}
-{#        .overdue { color: red; font-weight: bold; }#}
-{#    </style>#}
-{#</head>#}
-{#<body>#}
-{#    <div class="container">#}
-{#        <h1 class="mb-4">Admin Dashboard</h1>#}
-{##}
-{#        <h2 class="mb-3">Developers and Their Tasks</h2>#}
-{#        <div class="table-responsive mb-5">#}
-{#            <table class="table table-bordered">#}
-{#                <thead>#}
-{#                    <tr>#}
-{#                        <th>Developer</th>#}
-{#                        <th>Tasks</th>#}
-{#                        <th>Balance</th>#}
-{#                    </tr>#}
-{#                </thead>#}
-{#                <tbody>#}
-{#                    {% for developer_info in developer_data %}#}
-{#                    <tr>#}
-{#                        <td>{{ developer_info.developer.username }} ({{ developer_info.developer.email }})</td>#}
-{#                        <td>#}
-{#                            <ul>#}
-{#                                {% for task_info in developer_info.tasks %}#}
-{#                                <li>#}
-{#                                    <strong>{{ task_info.task.title }}</strong>#}
-{#                                    <ul>#}
-{#                                        <li>Progress: {{ task_info.task.progress }}%</li>#}
-{#                                        <li>Payment: {{ task_info.task.money_for_task }} USD</li>#}
-{#                                        {% if task_info.task.deadline %}#}
-{#                                            <li>Deadline: {{ task_info.task.deadline|date:"Y-m-d" }}</li>#}
-{#                                        {% else %}#}
-{#                                            <li>Deadline: No deadline</li>#}
-{#                                        {% endif %}#}
-{#                                        {% if task_info.task.progress == 100 %}#}
-{#                                            <li class="done">✔️ Done</li>#}
-{#                                        {% elif task_info.days_until_deadline is not None and task_info.days_until_deadline < 0 %}#}
-{#                                            <li class="overdue">❌ Overdue</li>#}
-{#                                        {% endif %}#}
-{#                                    </ul>#}
-{#                                </li>#}
-{#                                {% endfor %}#}
-{#                            </ul>#}
-{#                        </td>#}
-{#                        <td>{{ developer_info.balance }} USD</td>#}
-{#                    </tr>#}
-{#                    {% empty %}#}
-{#                    <tr><td colspan="3">No developers or tasks available.</td></tr>#}
-{#                    {% endfor %}#}
-{#                </tbody>#}
-{#            </table>#}
-{#        </div>#}
-{##}
-{#        <h2 class="mb-3">All Deduction Logs</h2>#}
-{#        <div class="table-responsive">#}
-{#            {% if all_deduction_logs %}#}
-{#            <table class="table table-bordered">#}
-{#                <thead>#}
-{#                    <tr>#}
-{#                        <th>Developer</th>#}
-{#                        <th>Amount (USD)</th>#}
-{#                        <th>Deducted By</th>#}
-{#                        <th>Date</th>#}
-{#                    </tr>#}
-{#                </thead>#}
-{#                <tbody>#}
-{#                    {% for log in all_deduction_logs %}#}
-{#                    <tr>#}
-{#                        <td>{{ log.developer.username }}</td>#}
-{#                        <td>{{ log.deduction_amount }}</td>#}
-{#                        <td>{{ log.deducted_by.username }}</td>#}
-{#                        <td>{{ log.deduction_date|date:"Y-m-d H:i:s" }}</td>#}
-{#                    </tr>#}
-{#                    {% endfor %}#}
-{#                </tbody>#}
-{#            </table>#}
-{#            {% else %}#}
-{#            <p>No deduction logs available.</p>#}
-{#            {% endif %}#}
-{#        </div>#}
-{#    </div>#}
-{##}
-{#    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>#}
-{#</body>#}
-{#</html>#}

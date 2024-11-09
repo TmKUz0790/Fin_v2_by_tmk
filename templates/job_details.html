@@ -1,0 +1,163 @@
+
+{##}
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <meta name="viewport" content="width=device-width, initial-scale=1.0">#}
+{#    <title>Job Details</title>#}
+{#    <!-- Bootstrap CSS -->#}
+{#    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">#}
+{#</head>#}
+{#<body>#}
+{#    <!-- Navbar -->#}
+{#    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">#}
+{#        <div class="container-fluid">#}
+{#            <a class="navbar-brand" href="{% url 'admin_dashboard' %}">Admin Dashboard</a>#}
+{#            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">#}
+{#                <span class="navbar-toggler-icon"></span>#}
+{#            </button>#}
+{#            <div class="collapse navbar-collapse" id="navbarNav">#}
+{#                <ul class="navbar-nav">#}
+{#                    <li class="nav-item">#}
+{#                        <a class="nav-link" href="{% url 'admin_dashboard' %}">Dashboard</a>#}
+{#                    </li>#}
+{#                    <li class="nav-item">#}
+{#                        <a class="nav-link" href="{% url 'job_list' %}">Job List</a>#}
+{#                    </li>#}
+{#                </ul>#}
+{#            </div>#}
+{#        </div>#}
+{#    </nav>#}
+{##}
+{#    <!-- Main Content -->#}
+{#    <div class="container mt-5">#}
+{#        <h1>Job Details</h1>#}
+{##}
+{#        <!-- Back to Job List Button -->#}
+{#        <a href="{% url 'job_list' %}" class="btn btn-secondary mb-3">Back to Job List</a>#}
+{##}
+{#        <div class="card mb-4">#}
+{#            <div class="card-body">#}
+{#                <h5 class="card-title">{{ job.title }}</h5>#}
+{#                <p class="card-text"><strong>Client Email:</strong> {{ job.client_email }}</p>#}
+{#                <p class="card-text"><strong>Description:</strong> {{ job.description }}</p>#}
+{#                {% if job.deadline %}#}
+{#                    <p class="card-text"><strong>Job Deadline:</strong> {{ job.deadline|date:"Y-m-d" }}</p>#}
+{#                {% else %}#}
+{#                    <p class="card-text"><strong>Job Deadline:</strong> No deadline</p>#}
+{#                {% endif %}#}
+{#                #}
+{#                <!-- Display latest task deadline if available -->#}
+{#                {% if latest_deadline %}#}
+{#                    <p class="card-text"><strong>Latest Task Deadline:</strong> {{ latest_deadline|date:"Y-m-d" }}</p>#}
+{#                {% endif %}#}
+{#            </div>#}
+{#        </div>#}
+{##}
+{#        <!-- List of Tasks -->#}
+{#        <h3>Tasks for this Job</h3>#}
+{#        <div class="table-responsive">#}
+{#            <table class="table table-bordered">#}
+{#                <thead class="table-dark">#}
+{#                    <tr>#}
+{#                        <th>Task Title</th>#}
+{#                        <th>Progress</th>#}
+{#                        <th>Deadline</th>#}
+{#                    </tr>#}
+{#                </thead>#}
+{#                <tbody>#}
+{#                    {% for task in tasks %}#}
+{#                    <tr>#}
+{#                        <td>{{ task.title }}</td>#}
+{#                        <td>{{ task.progress }}%</td>#}
+{#                        <td>#}
+{#                            {% if task.deadline %}#}
+{#                                {{ task.deadline|date:"Y-m-d" }}#}
+{#                            {% else %}#}
+{#                                No deadline#}
+{#                            {% endif %}#}
+{#                        </td>#}
+{#                    </tr>#}
+{#                    {% empty %}#}
+{#                    <tr>#}
+{#                        <td colspan="3" class="text-center">No tasks available for this job.</td>#}
+{#                    </tr>#}
+{#                    {% endfor %}#}
+{#                </tbody>#}
+{#            </table>#}
+{#        </div>#}
+{#    </div>#}
+{##}
+{#    <!-- Bootstrap JS -->#}
+{#    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>#}
+{#</body>#}
+{#</html>#}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Details</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'admin_dashboard' %}">Admin Dashboard</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'admin_dashboard' %}">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'job_list' %}">Job List</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-5">
+        <h1>Job Details</h1>
+
+        <!-- Back to Job List Button -->
+        <a href="{% url 'job_list' %}" class="btn btn-secondary mb-3">Back to Job List</a>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">{{ job.title }}</h5>
+                <p class="card-text"><strong>Client Email:</strong> {{ job.client_email }}</p>
+                
+                <!-- Display Overall Income from the Database -->
+                <p class="card-text"><strong>Overall Income:</strong> ${{ job.over_all_income }}</p>
+
+                <!-- Display Total Task Payment -->
+                <p class="card-text"><strong>Total Task Payment:</strong> ${{ total_task_payment }}</p>
+
+                <!-- Display Remaining Income -->
+                <p class="card-text"><strong>Remaining Income:</strong> ${{ remaining_income }}</p>
+
+                <!-- Display Overall Progress -->
+                <p class="card-text"><strong>Overall Progress:</strong> {{ overall_progress|floatformat:2 }}%</p>
+
+                <!-- Display latest task deadline if available -->
+                {% if latest_deadline %}
+                    <p class="card-text"><strong>Latest Task Deadline:</strong> {{ latest_deadline|date:"Y-m-d" }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

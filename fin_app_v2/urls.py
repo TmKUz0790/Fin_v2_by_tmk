@@ -2,11 +2,16 @@ from django.urls import path
 
 from . import views
 from .views import (create_job, create_tasks, job_list, client_login, client_progress,developer_login,developer_tasks,admin_dashboard,
-                    deduction_logs,all_deduction_logs,deduct_balance,login_view)
+                    deduction_logs,all_deduction_logs,deduction_logs_admin,deduct_balance,login_view)
 
 urlpatterns = [
     # Job creation (no developers assigned here)
-    path('jobs/create/', create_job, name='create_job'),
+    path('deduction_logs_admin/', views.deduction_logs_admin, name='deduction_logs_admin'),
+    path('job_details/<int:job_id>/', views.job_details, name='job_details'),
+    path('deduct/', views.deduction_page, name='deduction_page'),
+    path('payment_history/', views.payment_history, name='payment_history'),  # New URL for Payment History
+ # Add money URL
+
 
     # Task creation (developers assigned here)
     path('jobs/<int:job_id>/tasks/create/', create_tasks, name='task_create'),
